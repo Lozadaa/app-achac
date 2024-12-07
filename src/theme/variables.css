@@ -1,2 +1,12 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+@font-face{
+  font-family: "Montserrat";
+  src: url('Montserrat-VariableFont_wght.ttf');
+  font-weight: 100 900;
+}
+
+:root {
+  --ion-font-family: 'Montserrat', sans-serif;
+  --ion-color-primary: #103E72;
+}

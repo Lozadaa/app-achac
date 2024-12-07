@@ -1,8 +1,7 @@
-import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react';
+import { IonApp, IonLoading, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
-import Menu from './components/Menu';
-import Page from './pages/Page';
+import Menu from './components/Menu/Menu';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -29,25 +28,51 @@ import '@ionic/react/css/display.css';
 
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
-import '@ionic/react/css/palettes/dark.system.css';
+//import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Home from './pages/Home/Home';
+import { useEffect, useState } from 'react';
+import Login from './pages/Login/Login';
+import { getUser } from './utils/userUtils';
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [isUserLogged, setIsUserLogged] = useState<boolean | undefined>();
+
+  useEffect(() => {
+    const getDataLogged = async () => {
+      const user = await getUser();
+      setIsUserLogged(!!user);
+    }
+
+    getDataLogged();
+  }, []);
+
+  if (isUserLogged === undefined) {
+    return (
+      <IonApp>
+        <IonLoading />
+      </IonApp>
+    );
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          <Menu />
+          {isUserLogged && <Menu />}
           <IonRouterOutlet id="main">
             <Route path="/" exact={true}>
-              <Redirect to="/folder/Inbox" />
+              <Redirect to={isUserLogged ? "/home" : "/login"} />
             </Route>
-            <Route path="/folder/:name" exact={true}>
-              <Page />
+            <Route path="/home" exact={true}>
+              <Home />
+            </Route>
+            <Route path="/login" exact={true}>
+              <Login />
             </Route>
           </IonRouterOutlet>
         </IonSplitPane>
