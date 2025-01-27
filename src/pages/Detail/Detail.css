@@ -4,7 +4,7 @@ ion-avatar {
   height: 30px;
 }
 
-.header-home{
+.header-detail{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -12,19 +12,20 @@ ion-avatar {
   padding: 1rem;
 }
 
-.header-home .image-name {
+.header-detail .image-name {
+  width: 100%;
   display: flex;
   gap: 0.9rem;
-  align-items: center;
+  justify-content: space-between;
 }
 
-.header-home h1 {
+.header-detail h1 {
   font-size: 1.5rem;
   font-weight: 500;
   margin-top: 10px;
 }
 
-.header-home p {
+.header-detail p {
   font-size: 0.8rem;
   font-weight: 400;
   color: #8a8a8a;

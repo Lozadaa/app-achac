@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import Logo from '@/assets/logo.png';
 import { FormInput } from '@/components/FormInput/FormInput';
 import './Login.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosStandalone } from "@/utils/axios";
 import { ResponseAuth, RequestState, UserResponse } from "@/types/Auth";
 import { Preferences } from "@capacitor/preferences";
@@ -14,10 +14,10 @@ export type LoginFormData = {
 }
 
 const Login = () => {
-  const { control, handleSubmit } = useForm<LoginFormData>();
+  const { control, handleSubmit, watch } = useForm<LoginFormData>();
   const [request, setRequest] = useState<RequestState>('idle');
-  const isLoading = request === 'loading'
-  ;
+  const isLoading = request === 'loading';
+
   const onSubmit = async (user: LoginFormData) => {
     setRequest('loading');
     
@@ -30,14 +30,24 @@ const Login = () => {
         });
         window.location.href = '/home';
       }
-    }catch(error){
-      setRequest('error');
+    }catch(error: any){
+      if(error.status === 401){
+        setRequest('error');
+        return;
+      }
+
+      setRequest('server_error');
+
       console.error(error);
       return;
     }
 
     setRequest('success');
   }
+
+  useEffect(() => {
+    setRequest('idle');
+  }, [watch('email'), watch('password')]);
 
   return (
     <IonPage>
@@ -80,6 +90,12 @@ const Login = () => {
                 }
               }}
             />
+            {request === 'error' && <div className="login__alert">
+               <IonText color="danger">Usuario o contraseña incorrectos</IonText>
+            </div>}
+            {request === 'server_error' && <div className="login__alert">
+               <IonText color="danger">Ha ocurrido un error en la conexión</IonText>
+            </div>}
             <IonButton 
               className="login__button" 
               expand="block" 

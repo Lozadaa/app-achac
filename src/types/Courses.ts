@@ -1,30 +1,30 @@
 export type CourseInitatedList = CourseInitated[]
 
+export type CourseList = Course[]
+
+export type Course = {
+  id: number
+  name: string
+  color: string
+  created_at: string
+  updated_at: string
+}
+
 export interface CourseInitated {
   id: number
   headquarter_id: number
+  headquarter_name: string
   course_id: number
-  user_id: number
-  status_course: string
-  created_at: string
-  updated_at: string
-  headquarter: Headquarter
-  course: Course
-  course_schedules: CourseSchedule[]
-  user: User
-  students: Student[]
-}
-
-export interface Headquarter {
-  id: number
-  name: string
+  course_name: string
+  professor_id: number
   status: string
   created_at: string
   updated_at: string
-  discarded_at: any
+  start_time: string
+  end_time: string  
 }
 
-export interface Course {
+export interface Headquarter {
   id: number
   name: string
   status: string

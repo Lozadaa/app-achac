@@ -1,4 +1,4 @@
-export type RequestState = 'success' | 'error' | 'loading' | 'idle';
+export type RequestState = 'success' | 'error' | 'server_error' | 'loading' | 'idle';
 
 export type ResponseAuth<T> = {
   status: {
@@ -14,4 +14,5 @@ export type UserResponse = {
   email: string;
   name: string;
   status: string;
+  photo_url: string;
 }

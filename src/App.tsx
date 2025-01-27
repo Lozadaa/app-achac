@@ -36,6 +36,8 @@ import Home from './pages/Home/Home';
 import { useEffect, useState } from 'react';
 import Login from './pages/Login/Login';
 import { getUser } from './utils/userUtils';
+import Detail from './pages/Detail/Detail';
+import Attendants from './pages/Attendants/Attendants';
 
 setupIonicReact();
 
@@ -73,6 +75,12 @@ const App: React.FC = () => {
             </Route>
             <Route path="/login" exact={true}>
               <Login />
+            </Route>
+            <Route path="/detail/:id" exact={true}>
+              <Detail />
+            </Route>
+            <Route path="/detail/:id/attendants" exact={true}>
+              <Attendants />
             </Route>
           </IonRouterOutlet>
         </IonSplitPane>

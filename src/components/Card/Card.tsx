@@ -6,12 +6,14 @@ import './Card.css';
 type Props = {
   title: string;
   description: string;
+  onClick?: () => void;
+  backgroundColor?: string;
 }
 
-const Card = ({title, description}: Props) => {
+const Card = ({title, description, onClick, backgroundColor = 'transparent'}: Props) => {
   return (
-    <IonCard>
-      <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+    <IonCard onClick={onClick} >
+      <div className='color-card' style={{ backgroundColor }} />
       <IonCardHeader>
         <IonCardTitle>{title}</IonCardTitle>
         <IonCardSubtitle>{description}</IonCardSubtitle>

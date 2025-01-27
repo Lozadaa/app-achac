@@ -2,36 +2,33 @@ import { format, isAfter, parseISO, differenceInCalendarDays } from "date-fns";
 import { es } from "date-fns/locale";
 
 type CourseSchedule = {
-  schedule_day: string; // Formato YYYY-MM-DD
   start_time: string;   // Formato ISO (e.g., 2000-01-01T19:00:00.000-03:00)
 };
 
 // Función para combinar fecha y hora en un objeto de fecha
-const combineDateAndTime = (schedule_day: string, start_time: string): Date => {
-  const date = parseISO(schedule_day);
-  const time = parseISO(start_time);
+const combineDateAndTime = (start_time: string): Date => {
+  const datetime = parseISO(start_time);
   return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    time.getHours(),
-    time.getMinutes(),
-    time.getSeconds()
+    datetime.getFullYear(),
+    datetime.getMonth(),
+    datetime.getDate(),
+    datetime.getHours(),
+    datetime.getMinutes(),
+    datetime.getSeconds()
   );
 };
 
 // Filtrar las clases futuras
 const filterFutureClasses = (courses: CourseSchedule[], now: Date): CourseSchedule[] => {
-  return courses.filter(({ schedule_day, start_time }) => 
-    isAfter(combineDateAndTime(schedule_day, start_time), now)
+  return courses.filter(({ start_time }) => 
+    isAfter(combineDateAndTime(start_time), now)
   );
 };
 
 // Obtener la clase más cercana
 const getClosestClass = (courses: CourseSchedule[]): CourseSchedule | null => {
   return courses.sort((a, b) => 
-    combineDateAndTime(a.schedule_day, a.start_time).getTime() - 
-    combineDateAndTime(b.schedule_day, b.start_time).getTime()
+    parseISO(a.start_time).getTime() - parseISO(b.start_time).getTime()
   )[0] || null;
 };
 
@@ -43,7 +40,7 @@ export const getNextClassBySchedules = (courses: CourseSchedule[]): string | und
 
   if (!nextClass) return undefined;
 
-  const nextClassTime = combineDateAndTime(nextClass.schedule_day, nextClass.start_time);
+  const nextClassTime = parseISO(nextClass.start_time);
 
   // Calcular la diferencia en días
   const daysDifference = differenceInCalendarDays(nextClassTime, now);

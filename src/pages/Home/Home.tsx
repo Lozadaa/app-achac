@@ -1,21 +1,22 @@
 import './Home.css';
 import { Layout } from '../../components/Layout';
 import { useUser } from '@/hooks/useUser';
-import { IonAvatar, IonGrid, IonRow, IonSpinner, IonTitle } from '@ionic/react';
+import { IonAvatar, IonIcon, IonSpinner } from '@ionic/react';
 import { UserResponse } from '@/types/Auth';
 import Card from '@/components/Card/Card';
 import { useEffect, useState } from 'react';
 import { axiosClient } from '@/utils/axios';
-import { CourseInitated, CourseInitatedList } from '@/types/Courses';
+import { CourseList } from '@/types/Courses';
 import { getNextClassBySchedules } from '@/utils/dataMappers';
 import emptyImage from '@/assets/empty.png';
+import { calendarOutline } from 'ionicons/icons';
 
 const CustomToolbar: React.FC<{user: UserResponse | null}> = ({user}) => {
   return (
-    <div className="header">
+    <div className="header-home">
       <div className='image-name'>
         <IonAvatar>
-          <img alt="Imagen perfil" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          <img alt="Imagen perfil" src={user?.photo_url ?? "https://ionicframework.com/docs/img/demos/avatar.svg"} />
         </IonAvatar> 
         <h1>Hola {user?.name} </h1>
       </div>
@@ -24,24 +25,20 @@ const CustomToolbar: React.FC<{user: UserResponse | null}> = ({user}) => {
   );
 }
 
+
 const Home: React.FC = () => {
   const {user} = useUser();
-  const [stateResponse, setStateResponse] = useState<'loading' | 'error' | 'success'>('loading');
-  const [courses, setCourses] = useState<{name: string, location: string, nearestDate?: string}[]>();
+  const [stateResponse, setStateResponse] = useState<'loading' | 'error' | 'success'>('success');
+  const [courses, setCourses] = useState<CourseList>([]);
 
   useEffect(() => {
     const getCoursersTeacher = async () => {
       setStateResponse('loading');
       try{
-        const {data} = await axiosClient.get<CourseInitatedList>('/teacher_courses');
-        const coursesData = data?.map(({course: {name}, headquarter: {name: location}, course_schedules}) => ({
-          name,
-          location,
-          nearestDate: getNextClassBySchedules(course_schedules)
-        })).filter(({nearestDate}) => nearestDate);
+        const {data} = await axiosClient.get<CourseList>('/courses');
         setStateResponse('success');
 
-        return setCourses(coursesData);
+        return setCourses(data);
       }catch(error){
         console.error(error);
         setStateResponse('error');
@@ -52,19 +49,21 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <Layout customToolbar={<CustomToolbar user={user} />} title="XD">
+    <Layout customToolbar={<CustomToolbar user={user} />} title="Inicio">
       <div className="container">
-        <h2 className='subtitle'>Proximas clases:</h2>
+        <h2 className='subtitle'><IonIcon src={calendarOutline} /> Tus cursos:</h2>
         {stateResponse === 'success' && courses?.length === 0 && 
           <div className='empty-container'>
             <img src={emptyImage} alt='empty' />
             <p className='empty-text'>No tienes clases proximas</p>
           </div>}
         {stateResponse === 'loading' && (<div className='empty-container'><IonSpinner name="crescent" /></div>)}
-        {stateResponse === 'success' && courses?.map(({location, name, nearestDate}) => 
+        {stateResponse === 'success' && courses?.map(({id, name, color = '#222D3A'}) => 
           (<Card 
               title={name} 
-              description={`${location} - ${nearestDate}`} 
+              description={''} 
+              backgroundColor={color}
+              onClick={() => window.location.href = `/detail/${id}`}
             />)
         )}
       </div>
