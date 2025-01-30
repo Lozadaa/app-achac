@@ -32,6 +32,7 @@ const Attendants: React.FC = () => {
     'loading' | 'error' | 'success'
   >('success')
   const [students, setStudents] = useState<Students[]>([])
+  const [student, setStudent] = useState<Students[]>([])
   const { id: idCourse } = useParams<{ id: string }>()
 
   useEffect(() => {
@@ -112,6 +113,25 @@ const Attendants: React.FC = () => {
     }
   }
 
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  useEffect(() => {
+    if (searchTerm === '') {
+      setStudent(students)
+    }
+  }, [searchTerm])
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSearchTerm(value)
+
+    const filteredStudents = students.filter((student) =>
+      `${student.first_name} ${student.last_name}`
+        .toLowerCase()
+        .includes(value.toLowerCase())
+    )
+    setStudent(filteredStudents)
+  }
+
   return (
     <Layout
       customToolbar={<CustomToolbar courseName={students[0]?.subject} />}
@@ -127,8 +147,23 @@ const Attendants: React.FC = () => {
           <h1>No hay alumnos para el día</h1>
         )}
 
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Buscar alumno..."
+            value={searchTerm}
+            onChange={(e) => {
+              handleSearchChange(e)
+            }}
+            className="custom-input"
+          />
+        </div>
+
+        {stateResponse === 'success' && student.length === 0 && (
+          <h1>No hay alumnos para el día</h1>
+        )}
         {stateResponse === 'success' &&
-          students.map((student: Students) => (
+          student.map((student: Students) => (
             <StudentAttendant
               key={student.student_id}
               name={`${student.first_name} ${student.last_name}`}

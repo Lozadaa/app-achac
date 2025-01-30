@@ -15,3 +15,25 @@
   border-radius: 5px;
   padding: 5px;
 }
+
+.custom-input {
+  padding-left: 1rem; /* pl-9 */
+  padding-right: 1rem; /* pr-4 */
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem; /* py-2 */
+  height: 2.5rem; /* h-10 */
+  width: 100%; /* w-full */
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #c0bcbc; /* border border-input */
+  background-color: var(--background); /* bg-background */
+  outline: none; /* focus-visible:outline-none */
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.custom-input::placeholder {
+  color: var(--muted-foreground); /* placeholder:text-muted-foreground */
+}
+
+.custom-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background); /* focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 */
+}
