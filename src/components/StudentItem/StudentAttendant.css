@@ -1,33 +1,34 @@
 .student-attendants {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    gap: 5%;
-    text-align: center;
-    align-content: center;
-    border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 5%;
+  text-align: center;
+  align-content: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 2%;
+  padding: 6px;
 }
 
 .student-attendants h1 {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-top: 10px;
 }
 
 .student-attendants img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 
 ion-select {
   height: 30px;
   border-radius: 10px;
   flex: 1;
-  
+
   display: contents;
   width: 100px !important;
   font-size: 1.2rem;

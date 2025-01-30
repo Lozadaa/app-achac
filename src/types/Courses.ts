@@ -3,13 +3,34 @@ export type CourseInitatedList = CourseInitated[]
 export type CourseList = Course[]
 
 export type Course = {
-  id: number
-  name: string
-  color: string
-  created_at: string
-  updated_at: string
+  id: string
+  type: string
+  attributes: {
+    id: number
+    start_date: string // Fecha en formato ISO
+    end_date: string
+    course_id: number
+    subject_id: number
+    headquarter_id: number
+    professor_id: number
+    status: string
+    course_name: string
+    course_color: string
+    headquarter_name: string
+    professor_name: string
+    subject_name: string
+  }
 }
 
+export interface Students {
+  student_id: number
+  first_name: string
+  last_name: string
+  attendance_status: string | null
+  photo: string
+  attendance_id: number
+  subject: string
+}
 export interface CourseInitated {
   id: number
   headquarter_id: number
@@ -21,7 +42,7 @@ export interface CourseInitated {
   created_at: string
   updated_at: string
   start_time: string
-  end_time: string  
+  end_time: string
 }
 
 export interface Headquarter {
@@ -84,4 +105,21 @@ export interface Student {
   created_at: string
   updated_at: string
   discarded_at: any
+}
+
+export interface StudentsFeedback {
+  data: Datum[]
+}
+
+export interface Datum {
+  id: string
+  type: string
+  attributes: Attributes
+}
+
+export interface Attributes {
+  id: number
+  detail: string
+  created_at: Date
+  student_id: number
 }

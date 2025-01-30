@@ -1,68 +1,71 @@
-import './Detail.css';
-import { Layout } from '../../components/Layout';
-import { useParams } from 'react-router';
-import Card from '@/components/Card/Card';
-import { IonIcon } from '@ionic/react';
-import { arrowBackOutline } from 'ionicons/icons';
-import { useEffect, useState } from 'react';
-import { Course } from '@/types/Courses';
-import { axiosClient } from '@/utils/axios';
+import './Detail.css'
+import { Layout } from '../../components/Layout'
+import { useParams } from 'react-router'
+import Card from '@/components/Card/Card'
+import { IonIcon } from '@ionic/react'
+import { arrowBackOutline } from 'ionicons/icons'
 
-const QUICK_ACTIONS = [{
-  title: 'Asistencias',
-  description: 'Accionar las asistencias del curso',
-  backgroundColor: '#0a4aa3',
+const QUICK_ACTIONS = [
+  {
+    id: 1,
+    title: 'Asistencias',
+    description: 'Accionar las asistencias del curso',
+    backgroundColor: '#0a4aa3'
+  },
+  {
+    id: 2,
+    title: 'Feedback',
+    description: 'Accionar feedback de los alumnos',
+    backgroundColor: '#32a852'
+  }
+]
 
-}, {
-  title: 'Notas',
-  description: 'Accionar las notas del curso',
-  backgroundColor: '#32a852',
-}]
-
-const CustomToolbar: React.FC<{courseName: string}> = ({courseName}) => {
+const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   return (
     <div className="header-detail">
-      <div className='image-name'>
-        <IonIcon src={arrowBackOutline} onClick={() => window.location.href = '/home'} />
+      <div className="image-name">
+        <IonIcon
+          src={arrowBackOutline}
+          onClick={() => (window.location.href = '/home')}
+        />
         <h1>{courseName}</h1>
         <div />
       </div>
       <p>Ver detalle del curso con la información relevante</p>
     </div>
-  );
+  )
 }
 
 const Detail: React.FC = () => {
-  const {id} = useParams<{id: string}>();
-  const [course, setCourse] = useState<Course>();
+  const { id: idCourse } = useParams<{ id: string }>()
+  const queryParams = new URLSearchParams(window.location.search)
+  const courseName = queryParams.get('courseName') || ''
 
-  // use effect to get the course detail like home page
-  useEffect(() => {
-    const getCourseDetail = async () => {
-      try {
-        const {data} = await axiosClient.get<Course>(`/course/${id}`);
-        if(!data) {
-          window.location.href = '/home';
-          return;
-        }
-        setCourse(data);
-      } catch (error) {
-        console.error(error);
-        window.location.href = '/home';
-      }
+  const handleNavigate = (id: number) => {
+    if (id === 1) {
+      window.location.href = `/detail/${idCourse}/attendants`
+    } else {
+      window.location.href = `/detail/${idCourse}/feedback`
     }
-  }, [id]);
+  }
 
   return (
-    <Layout customToolbar={<CustomToolbar courseName={course!.name} />} title={course!.name} >
+    <Layout
+      customToolbar={<CustomToolbar courseName={courseName} />}
+      title={courseName}
+    >
       <div className="container">
-        <h2 className='subtitle'>Acciones rapidas:</h2>
-        {QUICK_ACTIONS.map((card) =>
-          <Card {...card} onClick={() => window.location.href = `/detail/${id}/attendants`}/>
-        )}
+        <h2 className="subtitle">Acciones rapidas:</h2>
+        {QUICK_ACTIONS.map((card) => (
+          <Card
+            {...card}
+            key={card.title}
+            onClick={() => handleNavigate(card.id)}
+          />
+        ))}
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Detail;
+export default Detail

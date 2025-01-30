@@ -1,0 +1,30 @@
+.feedback {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.container-feedBack {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.login__button {
+  margin-top: 1rem;
+}
+
+.empty-state {
+  font-size: 20px;
+  color: #0a4aa3;
+  font-weight: 600;
+  text-align: center;
+}
+
+.load-more {
+  margin-bottom: 1rem;
+}

@@ -1,32 +1,35 @@
-import './StudentAttendant.css';
-import { IonSelect, IonSelectOption, useIonAlert } from "@ionic/react";
+import './StudentAttendant.css'
+import { IonSelect, IonSelectOption } from '@ionic/react'
+import Logo from '@/assets/logo.png'
 
 type Props = {
-  id: number;
-  name: string;
-  image: string;
-  onChange: (id: number, value: 'presente' | 'tarde' | 'falta') => void;
+  name: string
+  image: File | string | undefined
+  onChange: (value: 'present' | 'late' | 'no_present') => void
+  attendances: string | null
 }
 
-const StudentAttendant = ({id, name, image, onChange}: Props) => {
-  
+const StudentAttendant = ({ name, image, onChange, attendances }: Props) => {
   const handleOnChange = (event: any) => {
-    onChange(id, event.detail.value);
+    onChange(event.detail.value)
   }
 
   return (
     <div className="student-attendants">
-      <img src={image} alt="Imagen de perfil" />
+      <img
+        src={image instanceof File ? URL.createObjectURL(image) : image || Logo}
+        alt="Imagen de perfil"
+      />
       <h1>{name}</h1>
-      <IonSelect 
+      <IonSelect
         interface="action-sheet"
-        onChange={(event) => handleOnChange(event)} 
-        value='falta' 
-        mode='md'
+        onIonChange={(event) => handleOnChange(event)}
+        value={attendances ?? 'no_present'}
+        mode="md"
       >
-        <IonSelectOption value="presente">Presente</IonSelectOption>
-        <IonSelectOption value="tarde">Tarde</IonSelectOption>
-        <IonSelectOption value="falta">Falta</IonSelectOption>
+        <IonSelectOption value="present">Presente</IonSelectOption>
+        <IonSelectOption value="late">Tarde</IonSelectOption>
+        <IonSelectOption value="no_present">Falta</IonSelectOption>
       </IonSelect>
     </div>
   )
