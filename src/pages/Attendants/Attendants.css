@@ -8,8 +8,14 @@
 
 .search-container {
   width: 100% !important;
+  position: relative;
 }
 
+.icon {
+  position: absolute;
+  left: 10px;
+  top: 11px;
+}
 .search-input {
   width: 100%;
   border-radius: 5px;
@@ -17,7 +23,7 @@
 }
 
 .custom-input {
-  padding-left: 1rem; /* pl-9 */
+  padding-left: 1.8rem; /* pl-9 */
   padding-right: 1rem; /* pr-4 */
   padding-top: 0.5rem; /* py-2 */
   padding-bottom: 0.5rem; /* py-2 */

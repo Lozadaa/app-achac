@@ -2,7 +2,7 @@ import './Attendants.css'
 import { Layout } from '../../components/Layout'
 import { useParams } from 'react-router'
 import { IonIcon, IonSpinner } from '@ionic/react'
-import { arrowBackOutline } from 'ionicons/icons'
+import { arrowBackOutline, searchOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { axiosClient } from '@/utils/axios'
 import StudentAttendant from '@/components/StudentItem/StudentAttendant'
@@ -157,6 +157,8 @@ const Attendants: React.FC = () => {
             }}
             className="custom-input"
           />
+
+          <IonIcon src={searchOutline} className="icon" />
         </div>
 
         {stateResponse === 'success' && student.length === 0 && (
