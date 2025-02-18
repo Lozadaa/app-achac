@@ -1,6 +1,8 @@
 .container {
   margin: 0 auto;
   width: 90%;
+  max-height: 40vh;
+  overflow-y: auto;
 }
 
 .list {
@@ -9,31 +11,11 @@
   margin: 0 0 20px 0;
 }
 
-.item {
-  margin-bottom: 8px;
-}
-
-.label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background-color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 1px solid #c6d9fa;
-  box-shadow: 0px 1px 0px;
-}
-
-.text {
-  color: black;
-  font-size: 16px;
-}
-
 .inputGroup {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 10px;
 }
 
 .textarea {
@@ -45,4 +27,126 @@
   font-size: 16px;
   resize: none;
   outline: none !important;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  padding: 14px 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+  transition: max-height 0.4s ease-out, transform 0.2s ease-in-out,
+    border 0.3s ease-in-out;
+  margin-bottom: 12px;
+  border: 2px solid #0a4aa3;
+  opacity: 0;
+  animation: fadeInUp 0.4s ease-out forwards;
+  max-height: 70px;
+  overflow: hidden;
+  position: relative;
+}
+
+.item:hover {
+  transform: translateY(-3px);
+  border-color: #083b82;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #b3b3b3;
+  margin-right: 4px;
+}
+
+.text {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.trashButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.trashButton:hover {
+  transform: scale(1.1);
+}
+
+.date {
+  font-size: 12px;
+  color: #0a4aa3;
+  font-weight: 600;
+  text-align: right;
+  margin-top: 8px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+.text ion-icon {
+  flex-shrink: 0;
+}
+
+.expandedItem {
+  max-height: 500px;
+  overflow: visible;
+}
+
+.toggleButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 3px;
+  top: 18px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.toggleButton:hover {
+  transform: scale(1.1);
+}
+
+.truncatedText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+
+.expandedText {
+  white-space: normal;
+  overflow: visible;
+  max-height: none;
+  transition: max-height 0.4s ease-out;
 }

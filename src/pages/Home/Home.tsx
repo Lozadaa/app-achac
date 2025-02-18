@@ -37,12 +37,13 @@ const Home: React.FC = () => {
     'loading' | 'error' | 'success'
   >('success')
   const [courses, setCourses] = useState<CourseList>([])
-
+  console.log('courses', courses)
   useEffect(() => {
     const getCoursersTeacher = async () => {
       setStateResponse('loading')
       try {
         const { data } = await axiosClient.get<any>('/teacher/courses')
+        console.log('data', data)
         setStateResponse('success')
         const dataFormatter = getClosestCourses(data.data)
         return setCourses(dataFormatter)
@@ -80,7 +81,7 @@ const Home: React.FC = () => {
               description={''}
               backgroundColor={item.attributes.course_color ?? '#222D3A'}
               onClick={() =>
-                (window.location.href = `/detail/${item.attributes.course_id}?courseName=${item.attributes.course_name}`)
+                (window.location.href = `/detail/${item.attributes.id}?courseName=${item.attributes.course_name}`)
               }
             />
           ))}

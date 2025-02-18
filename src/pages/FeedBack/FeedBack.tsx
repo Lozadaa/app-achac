@@ -10,11 +10,17 @@ import {
   IonSelectOption,
   IonSpinner
 } from '@ionic/react'
-import { arrowBackOutline, trashOutline } from 'ionicons/icons'
+import {
+  arrowBackOutline,
+  trashOutline,
+  chevronDownOutline,
+  chevronUpOutline
+} from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import './FeedBack.css'
 import styles from './list.module.css'
+import moment from 'moment'
 
 const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   return (
@@ -29,7 +35,7 @@ const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   )
 }
 
-const FeekBack = () => {
+const FeedBack = () => {
   const [stateResponse, setStateResponse] = useState<
     'loading' | 'error' | 'success'
   >('success')
@@ -40,28 +46,42 @@ const FeekBack = () => {
   const [valueText, setValueText] = useState('')
   const [valueStudent, setValueStudent] = useState<Number>(0)
   const { id: idCourse } = useParams<{ id: string }>()
-  useEffect(() => {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>(
+    {}
+  )
+
+  const toggleExpand = (id: number) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id] // Alternar el estado del ítem específico
+    }))
+  }
+
+  const getStudents = async () => {
     setStateResponse('loading')
-
-    const getStudents = async () => {
-      try {
-        const { data } = await axiosClient.get<Students[]>(
-          '/student/student_attendance/course_schedule',
-          {
-            params: {
-              course_schedule_id: idCourse
-            }
+    try {
+      const { data } = await axiosClient.get<Students[]>(
+        '/student/student_attendance/course_schedule',
+        {
+          params: {
+            course_schedule_id: idCourse
           }
-        )
-        setStudents(data)
-        setStateResponse('success')
-      } catch (error) {
-        setStateResponse('error')
-        console.error(error)
-      }
+        }
+      )
+      setStudents(data)
+    } catch (error) {
+      setStateResponse('error')
+      console.error(error)
+    } finally {
+      setStateResponse('success')
     }
+  }
 
-    getStudents()
+  useEffect(() => {
+    if (idCourse) {
+      getStudents()
+    }
   }, [idCourse])
 
   const getFeedbackStudent = async () => {
@@ -107,8 +127,8 @@ const FeekBack = () => {
           student_id: valueStudent
         }
       })
-      await getFeedbackStudent()
       setValueText('')
+      await getFeedbackStudent()
     } catch (error) {
       console.error(error)
     } finally {
@@ -132,9 +152,11 @@ const FeekBack = () => {
           </div>
         )}
         {stateResponse === 'success' && students.length === 0 && (
-          <h1>no hay alumnos para colocar feedback</h1>
+          <h1 className="centered-content">
+            no hay alumnos para colocar feedback
+          </h1>
         )}
-        {stateResponse === 'success' && (
+        {stateResponse === 'success' && students.length > 0 && (
           <div className="feedback">
             <IonList>
               <IonItem>
@@ -157,7 +179,7 @@ const FeekBack = () => {
             </IonList>
           </div>
         )}
-        {feedBackStudent.length >= 0 && (
+        {stateResponse === 'success' && feedBackStudent.length > 0 && (
           <div className="feedback">
             <div className={styles.container}>
               <ol className={styles.list}>
@@ -166,22 +188,60 @@ const FeekBack = () => {
                     El estudiante no tiene feedbak
                   </h1>
                 )}
-                {feedBackStudent.slice(0, visibleCount).map((item) => (
-                  <li key={item.id} className={styles.item}>
-                    <label className={styles.label}>
-                      <span className={styles.text}>
-                        {item.attributes.detail}
+                {feedBackStudent.slice(0, visibleCount).map((item) => {
+                  const isExpanded = expandedItems[Number(item.id)]
+
+                  return (
+                    <li
+                      key={item.id}
+                      className={`${styles.item} ${
+                        isExpanded ? styles.expandedItem : ''
+                      }`}
+                    >
+                      <label className={styles.label}>
+                        <span className={styles.text}>
+                          <button
+                            className={styles.toggleButton}
+                            onClick={() => toggleExpand(Number(item.id))}
+                          >
+                            <IonIcon
+                              src={
+                                isExpanded
+                                  ? chevronUpOutline
+                                  : chevronDownOutline
+                              }
+                              color="black"
+                            />
+                          </button>
+                          <strong
+                            className={
+                              isExpanded
+                                ? styles.expandedText
+                                : styles.truncatedText
+                            }
+                          >
+                            {item.attributes.detail}
+                          </strong>
+                        </span>
+                        <button className={styles.trashButton}>
+                          <IonIcon
+                            src={trashOutline}
+                            onClick={() => handleDelete(Number(item.id))}
+                            color="danger"
+                          />
+                        </button>
+                      </label>
+                      <span className={styles.date}>
+                        <span className={styles.subtitle}>
+                          Fecha de feedback:
+                        </span>{' '}
+                        {moment(item.attributes.created_at).format(
+                          'DD/MM/YYYY'
+                        )}
                       </span>
-                      <button>
-                        <IonIcon
-                          src={trashOutline}
-                          onClick={() => handleDelete(Number(item.id))}
-                          color="danger"
-                        />
-                      </button>
-                    </label>
-                  </li>
-                ))}
+                    </li>
+                  )
+                })}
               </ol>
               <div className="load-more">
                 {visibleCount < feedBackStudent.length && (
@@ -201,6 +261,7 @@ const FeekBack = () => {
                 className={styles.textarea}
                 placeholder="Ingresa tu feedback."
                 rows={4}
+                value={valueText}
                 onChange={(e) => handleOnChange(e.target.value)}
               />
             </div>
@@ -213,7 +274,7 @@ const FeekBack = () => {
               onClick={() => {
                 handleAdd()
               }}
-              disabled={loading}
+              disabled={loading || valueText === ''}
             >
               Agregar {loading && <IonSpinner name="crescent" />}
             </IonButton>
@@ -224,4 +285,4 @@ const FeekBack = () => {
   )
 }
 
-export default FeekBack
+export default FeedBack

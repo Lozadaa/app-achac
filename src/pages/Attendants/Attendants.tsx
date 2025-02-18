@@ -34,30 +34,37 @@ const Attendants: React.FC = () => {
   const [students, setStudents] = useState<Students[]>([])
   const [student, setStudent] = useState<Students[]>([])
   const { id: idCourse } = useParams<{ id: string }>()
+  const [searchTerm, setSearchTerm] = useState<string>('')
+
+  const getStudents = async (id: string) => {
+    setStateResponse('loading')
+    try {
+      const { data } = await axiosClient.get<Students[]>(
+        '/student/student_attendance/course_schedule',
+        {
+          params: {
+            course_schedule_id: id
+          }
+        }
+      )
+      setStudents(data)
+    } catch (error) {
+      setStateResponse('error')
+      console.error(error)
+    } finally {
+      setStateResponse('success')
+    }
+  }
 
   useEffect(() => {
-    setStateResponse('loading')
-
-    const getStudents = async () => {
-      try {
-        const { data } = await axiosClient.get<Students[]>(
-          '/student/student_attendance/course_schedule',
-          {
-            params: {
-              course_schedule_id: idCourse
-            }
-          }
-        )
-        setStudents(data)
-        setStateResponse('success')
-      } catch (error) {
-        setStateResponse('error')
-        console.error(error)
-      }
+    if (idCourse) {
+      getStudents(idCourse)
     }
-
-    getStudents()
   }, [idCourse])
+
+  useEffect(() => {
+    setStudent(students)
+  }, [students])
 
   const createStudentAttendance = async (data: StudentAttendance) => {
     const dataSend = {
@@ -113,7 +120,6 @@ const Attendants: React.FC = () => {
     }
   }
 
-  const [searchTerm, setSearchTerm] = useState<string>('')
   useEffect(() => {
     if (searchTerm === '') {
       setStudent(students)
@@ -137,34 +143,36 @@ const Attendants: React.FC = () => {
       customToolbar={<CustomToolbar courseName={students[0]?.subject} />}
       title={students[0]?.subject}
     >
-      <div className="container">
+      <div
+        className="container"
+        style={{ paddingBottom: students.length >= 5 ? '6rem' : '0px' }}
+      >
         {stateResponse === 'loading' && (
           <div className="empty-container">
             <IonSpinner name="crescent" />
           </div>
         )}
-        {stateResponse === 'success' && students.length === 0 && (
-          <h1>No hay alumnos para el día</h1>
+        {stateResponse === 'success' && student.length === 0 && (
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Buscar alumno..."
+              value={searchTerm}
+              onChange={(e) => {
+                handleSearchChange(e)
+              }}
+              className="custom-input"
+            />
+
+            <IonIcon src={searchOutline} className="icon" />
+          </div>
         )}
-
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Buscar alumno..."
-            value={searchTerm}
-            onChange={(e) => {
-              handleSearchChange(e)
-            }}
-            className="custom-input"
-          />
-
-          <IonIcon src={searchOutline} className="icon" />
-        </div>
 
         {stateResponse === 'success' && student.length === 0 && (
-          <h1>No hay alumnos para el día</h1>
+          <h1 className="centered-content">No hay alumnos para el día</h1>
         )}
         {stateResponse === 'success' &&
+          student.length > 0 &&
           student.map((student: Students) => (
             <StudentAttendant
               key={student.student_id}

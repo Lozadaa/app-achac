@@ -44,7 +44,7 @@ import Login from './pages/Login/Login'
 import { getUser } from './utils/userUtils'
 import Detail from './pages/Detail/Detail'
 import Attendants from './pages/Attendants/Attendants'
-import FeekBack from './pages/FeedBack/FeekBack'
+import FeedBack from './pages/FeedBack/FeedBack'
 
 setupIonicReact()
 
@@ -90,7 +90,7 @@ const App: React.FC = () => {
               <Attendants />
             </Route>
             <Route path="/detail/:id/feedback" exact={true}>
-              <FeekBack />
+              <FeedBack />
             </Route>
           </IonRouterOutlet>
         </IonSplitPane>
