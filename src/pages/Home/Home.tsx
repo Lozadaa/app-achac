@@ -1,7 +1,13 @@
 import './Home.css'
 import { Layout } from '../../components/Layout'
 import { useUser } from '@/hooks/useUser'
-import { IonAvatar, IonIcon, IonSpinner } from '@ionic/react'
+import {
+  IonAvatar,
+  IonIcon,
+  IonSpinner,
+  IonText,
+  IonRippleEffect
+} from '@ionic/react'
 import { UserResponse } from '@/types/Auth'
 import Card from '@/components/Card/Card'
 import { useEffect, useState } from 'react'
@@ -9,7 +15,7 @@ import { axiosClient } from '@/utils/axios'
 import { CourseList } from '@/types/Courses'
 import { getClosestCourses } from '@/utils/dataMappers'
 import emptyImage from '@/assets/empty.png'
-import { calendarOutline } from 'ionicons/icons'
+import { calendarOutline, schoolOutline } from 'ionicons/icons'
 
 const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
   return (
@@ -24,9 +30,13 @@ const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
             }
           />
         </IonAvatar>
-        <h1>Hola {user?.name} </h1>
+        <div>
+          <IonText>
+            <h1>¡Hola, {user?.name}!</h1>
+          </IonText>
+          <p>Bienvenido a tu espacio de aprendizaje</p>
+        </div>
       </div>
-      <p>Tu resumen con todo lo que necesitas</p>
     </div>
   )
 }
@@ -37,13 +47,12 @@ const Home: React.FC = () => {
     'loading' | 'error' | 'success'
   >('success')
   const [courses, setCourses] = useState<CourseList>([])
-  console.log('courses', courses)
+
   useEffect(() => {
     const getCoursersTeacher = async () => {
       setStateResponse('loading')
       try {
         const { data } = await axiosClient.get<any>('/teacher/courses')
-        console.log('data', data)
         setStateResponse('success')
         const dataFormatter = getClosestCourses(data.data)
         return setCourses(dataFormatter)
@@ -60,31 +69,52 @@ const Home: React.FC = () => {
     <Layout customToolbar={<CustomToolbar user={user} />} title="Inicio">
       <div className="container">
         <h2 className="subtitle">
-          <IonIcon src={calendarOutline} /> Tus cursos:
+          <IonIcon icon={calendarOutline} /> Tus cursos activos
         </h2>
-        {stateResponse === 'success' && courses?.length === 0 && (
-          <div className="empty-container">
-            <img src={emptyImage} alt="empty" />
-            <p className="empty-text">No tienes clases proximas</p>
-          </div>
-        )}
+
         {stateResponse === 'loading' && (
-          <div className="empty-container">
+          <div className="loading-spinner">
             <IonSpinner name="crescent" />
           </div>
         )}
-        {stateResponse === 'success' &&
-          courses?.map((item) => (
-            <Card
-              key={item.id}
-              title={item.attributes.course_name}
-              description={''}
-              backgroundColor={item.attributes.course_color ?? '#222D3A'}
-              onClick={() =>
-                (window.location.href = `/detail/${item.attributes.id}?courseName=${item.attributes.course_name}`)
-              }
-            />
-          ))}
+
+        {stateResponse === 'success' && courses?.length === 0 && (
+          <div className="empty-container ion-activatable">
+            <IonRippleEffect />
+            <img src={emptyImage} alt="No hay cursos" />
+            <IonText color="medium">
+              <h2>No tienes cursos activos</h2>
+              <p>Los cursos que agregues aparecerán aquí</p>
+            </IonText>
+          </div>
+        )}
+
+        {stateResponse === 'success' && courses?.length > 0 && (
+          <div className="courses-grid">
+            {courses.map((item) => (
+              <div className="course-card" key={item.id}>
+                <Card
+                  title={item.attributes.course_name}
+                  description={''}
+                  backgroundColor={item.attributes.course_color ?? '#222D3A'}
+                  onClick={() =>
+                    (window.location.href = `/detail/${item.attributes.id}?courseName=${item.attributes.course_name}`)
+                  }
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {stateResponse === 'error' && (
+          <div className="empty-container">
+            <IonIcon icon={schoolOutline} size="large" color="medium" />
+            <IonText color="medium">
+              <p>Ocurrió un error al cargar los cursos</p>
+              <p>Por favor, intenta nuevamente</p>
+            </IonText>
+          </div>
+        )}
       </div>
     </Layout>
   )
