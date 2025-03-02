@@ -1,10 +1,143 @@
-ion-card .color-card{
-  height: 20px;
-  width: 100%;
-  object-fit: cover;
-}
-
 ion-card {
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
   cursor: pointer;
   background-color: #fff;
+  position: relative;
+}
+
+ion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.color-card {
+  height: 8px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.card-header {
+  padding: 20px 16px 12px;
+  position: relative;
+  z-index: 2;
+  background-color: #222d3a;
+  color: black;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: black;
+  margin: 0;
+}
+
+.card-time {
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  font-size: 0.9rem;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-info-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--ion-color-dark);
+  font-weight: 600;
+}
+
+.card-info-item ion-icon {
+  font-size: 0.9rem;
+  color: var(--ion-color-dark);
+  min-width: 16px;
+}
+
+ion-card-header {
+  padding: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+ion-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ion-color-dark);
+}
+
+ion-card-subtitle {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+.card-details {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+}
+
+.detail-item ion-icon {
+  font-size: 1rem;
+  color: var(--ion-color-primary);
+  min-width: 16px;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: var(--ion-color-dark);
+  margin-right: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-card {
+    background-color: var(
+      --ion-card-background,
+      var(--ion-item-background, var(--ion-background-color))
+    );
+  }
+
+  .card-header {
+    background-color: #fff;
+  }
+
+  .detail-label {
+    color: var(--ion-color-light);
+  }
 }

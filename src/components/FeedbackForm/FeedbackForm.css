@@ -1,0 +1,66 @@
+.feedback-form {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  margin: 4px 0;
+}
+
+.feedback-form-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 12px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.feedback-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feedback-textarea {
+  --background: #f7f7f7;
+  --color: #333;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --border-radius: 8px;
+  --border-color: transparent;
+  font-size: 0.95rem;
+}
+
+.feedback-textarea.ion-touched.ion-invalid {
+  --border-color: #ff3b30;
+}
+
+.feedback-submit-btn {
+  --background: #3880ff;
+  --background-hover: #3171e0;
+  --color: white;
+  --border-radius: 8px;
+  --box-shadow: none;
+  font-weight: 500;
+  margin-top: 4px;
+  height: 40px;
+}
+
+/* Estilos para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .feedback-form {
+    background-color: #ffffff;
+  }
+
+  .feedback-form-title {
+    color: #333;
+    border-bottom-color: #eee;
+  }
+
+  .feedback-textarea {
+    --background: #f7f7f7;
+    --color: #333;
+  }
+}

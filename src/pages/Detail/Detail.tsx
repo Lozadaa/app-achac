@@ -1,7 +1,7 @@
 import './Detail.css'
 import { Layout } from '../../components/Layout'
 import { useParams } from 'react-router'
-import Card from '@/components/Card/Card'
+import ActionCard from '@/components/ActionCard/ActionCard'
 import { IonIcon } from '@ionic/react'
 import { arrowBackOutline } from 'ionicons/icons'
 
@@ -23,15 +23,18 @@ const QUICK_ACTIONS = [
 const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   return (
     <div className="header-detail">
-      <div className="image-name">
-        <IonIcon
-          src={arrowBackOutline}
+      <div className="toolbar-container">
+        <div
+          className="back-button"
           onClick={() => (window.location.href = '/home')}
-        />
-        <h1>{courseName}</h1>
-        <div />
+        >
+          <IonIcon icon={arrowBackOutline} />
+        </div>
+        <div className="course-info">
+          <h1>{courseName}</h1>
+          <div className="course-subtitle">Información del curso</div>
+        </div>
       </div>
-      <p>Ver detalle del curso con la información relevante</p>
     </div>
   )
 }
@@ -55,12 +58,15 @@ const Detail: React.FC = () => {
       title={courseName}
     >
       <div className="container">
-        <h2 className="subtitle">Acciones rapidas:</h2>
-        {QUICK_ACTIONS.map((card) => (
-          <Card
-            {...card}
-            key={card.title}
-            onClick={() => handleNavigate(card.id)}
+        <h2 className="subtitle">Acciones rápidas:</h2>
+        {QUICK_ACTIONS.map((action) => (
+          <ActionCard
+            key={action.id}
+            id={action.id}
+            title={action.title}
+            description={action.description}
+            backgroundColor={action.backgroundColor}
+            onClick={() => handleNavigate(action.id)}
           />
         ))}
       </div>

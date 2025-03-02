@@ -1,54 +1,138 @@
-.feedback {
+.feedback-container {
   display: flex;
   flex-direction: column;
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
   width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-bottom: 100px;
 }
 
-.container-feedBack {
+.feedback-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.feedback-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.student-selector {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.select-list {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+.select-item {
+  --background: #ffffff !important;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin: 0;
+}
+
+.student-select {
+  width: 100%;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --color: #333;
+  --placeholder-color: #777;
+  --background: #ffffff !important;
+}
+
+.white-bg {
+  --background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+ion-select::part(icon) {
+  color: #333;
+}
+
+ion-select::part(text) {
+  color: #333;
+}
+
+ion-select-option {
+  background-color: #ffffff !important;
+  color: #333 !important;
+}
+
+.action-sheet-option.sc-ion-action-sheet-md {
+  background-color: #ffffff !important;
+  color: #333 !important;
+}
+
+.loading-container {
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 2rem;
+  align-items: center;
+  padding: 20px 0;
 }
 
-.login__button {
-  margin-top: 1rem;
+.feedbacks-list {
+  margin-top: 12px;
 }
 
 .empty-state {
-  font-size: 20px;
-  color: #0a4aa3;
-  font-weight: 600;
   text-align: center;
+  padding: 40px 0;
+  color: #777;
 }
 
-.load-more {
-  margin-bottom: 1rem;
+.empty-state h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
 }
 
-.centered-content {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  padding: 20px;
-  background: linear-gradient(135deg, #0a4aa3, #0a4aa3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.8s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* Estilos para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .section-title {
+    color: #333;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .select-item {
+    --background: #ffffff !important;
+  }
+
+  .student-select {
+    --color: #333;
+    --placeholder-color: #777;
+    --background: #ffffff !important;
+  }
+
+  ion-select-option {
+    background-color: #ffffff !important;
+    color: #333 !important;
+  }
+
+  .action-sheet-option.sc-ion-action-sheet-md {
+    background-color: #ffffff !important;
+    color: #333 !important;
+  }
+
+  .empty-state {
+    color: #999;
   }
 }

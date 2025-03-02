@@ -11,12 +11,18 @@ import { Students } from '@/types/Courses'
 const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   return (
     <div className="header-detail">
-      <div className="image-name">
-        <IonIcon src={arrowBackOutline} onClick={() => window.history.back()} />
-        <h1>{courseName}</h1>
-        <div />
+      <div className="toolbar-container">
+        <div
+          className="back-button"
+          onClick={() => (window.location.href = '/home')}
+        >
+          <IonIcon icon={arrowBackOutline} />
+        </div>
+        <div className="course-info">
+          <h1>{courseName}</h1>
+          <div className="course-subtitle">Listado de alumnos para el día</div>
+        </div>
       </div>
-      <p>Listado de alumnos para el día</p>
     </div>
   )
 }

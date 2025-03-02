@@ -1,0 +1,102 @@
+.action-card {
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 16px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.action-card-content {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 100%
+  );
+  z-index: 1;
+}
+
+.action-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  margin-right: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.action-card-icon ion-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.action-card-text {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.action-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.action-card-description {
+  font-size: 0.9rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.action-card-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.action-card-arrow ion-icon {
+  font-size: 20px;
+  color: white;
+}
+
+.action-card:hover .action-card-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .action-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .action-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+}

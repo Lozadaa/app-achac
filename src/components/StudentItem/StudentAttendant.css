@@ -1,39 +1,95 @@
 .student-attendants {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  margin-top: 20px;
-  gap: 5%;
-  text-align: center;
-  align-content: center;
-  border: 1px solid #e0e0e0;
-  border-radius: 2%;
-  padding: 6px;
+  padding: 16px;
+  margin: 12px 0;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
-.student-attendants h1 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-top: 10px;
+.student-attendants:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.student-image {
+  position: relative;
+  margin-right: 16px;
 }
 
 .student-attendants img {
-  width: 70px;
-  height: 70px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f5f5f5;
+}
+
+.student-info {
+  flex: 1;
+  text-align: left;
+}
+
+.student-attendants h1 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+.attendance-status {
+  margin-left: auto;
+  min-width: 110px;
 }
 
 ion-select {
-  height: 30px;
-  border-radius: 10px;
-  flex: 1;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --border-radius: 8px;
+  --background: #f7f7f7;
+  --color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  width: 100%;
+}
 
-  display: contents;
-  width: 100px !important;
-  font-size: 1.2rem;
+/* Estilos para los diferentes estados de asistencia */
+.status-present {
+  --background: rgba(50, 168, 82, 0.1);
+  --color: #32a852;
+}
 
-  --max-width: 50px !important;
-  --width: 50px !important;
-  --padding-start: 15px;
+.status-late {
+  --background: rgba(255, 187, 0, 0.1);
+  --color: #ffbb00;
+}
+
+.status-no_present {
+  --background: rgba(235, 87, 87, 0.1);
+  --color: #eb5757;
+}
+
+@media (prefers-color-scheme: dark) {
+  .student-attendants {
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .student-attendants h1 {
+    color: black;
+  }
+
+  ion-select {
+    --background: #2c2c2e;
+    --color: #f5f5f5;
+  }
+
+  .student-attendants img {
+    border-color: #2c2c2e;
+  }
 }

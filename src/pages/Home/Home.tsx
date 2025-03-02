@@ -64,7 +64,7 @@ const Home: React.FC = () => {
 
     getCoursersTeacher()
   }, [])
-
+  console.log('courses', courses)
   return (
     <Layout customToolbar={<CustomToolbar user={user} />} title="Inicio">
       <div className="container">
@@ -97,6 +97,9 @@ const Home: React.FC = () => {
                   title={item.attributes.course_name}
                   description={''}
                   backgroundColor={item.attributes.course_color ?? '#222D3A'}
+                  start_date={item.attributes.start_date}
+                  headquarters_name={item.attributes.headquarter_name}
+                  subject_name={item.attributes.subject_name}
                   onClick={() =>
                     (window.location.href = `/detail/${item.attributes.id}?courseName=${item.attributes.course_name}`)
                   }

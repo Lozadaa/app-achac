@@ -14,23 +14,44 @@ const StudentAttendant = ({ name, image, onChange, attendances }: Props) => {
     onChange(event.detail.value)
   }
 
+  const getStatusClass = () => {
+    switch (attendances) {
+      case 'present':
+        return 'status-present'
+      case 'late':
+        return 'status-late'
+      case 'no_present':
+      default:
+        return 'status-no_present'
+    }
+  }
+
   return (
     <div className="student-attendants">
-      <img
-        src={image instanceof File ? URL.createObjectURL(image) : image || Logo}
-        alt="Imagen de perfil"
-      />
-      <h1>{name}</h1>
-      <IonSelect
-        interface="action-sheet"
-        onIonChange={(event) => handleOnChange(event)}
-        value={attendances ?? 'no_present'}
-        mode="md"
-      >
-        <IonSelectOption value="present">Presente</IonSelectOption>
-        <IonSelectOption value="late">Tarde</IonSelectOption>
-        <IonSelectOption value="no_present">Falta</IonSelectOption>
-      </IonSelect>
+      <div className="student-image">
+        <img
+          src={
+            image instanceof File ? URL.createObjectURL(image) : image || Logo
+          }
+          alt={`Foto de ${name}`}
+        />
+      </div>
+      <div className="student-info">
+        <h1>{name}</h1>
+      </div>
+      <div className="attendance-status">
+        <IonSelect
+          interface="popover"
+          onIonChange={(event) => handleOnChange(event)}
+          value={attendances ?? 'no_present'}
+          mode="md"
+          className={getStatusClass()}
+        >
+          <IonSelectOption value="present">Presente</IonSelectOption>
+          <IonSelectOption value="late">Tarde</IonSelectOption>
+          <IonSelectOption value="no_present">Falta</IonSelectOption>
+        </IonSelect>
+      </div>
     </div>
   )
 }
