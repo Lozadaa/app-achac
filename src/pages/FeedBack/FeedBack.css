@@ -23,6 +23,8 @@
 .student-selector {
   margin-bottom: 0;
   padding-bottom: 0;
+  min-height: 85px;
+  height: 120px;
 }
 
 .section-title {
@@ -65,6 +67,14 @@
   background-color: #ffffff !important;
 }
 
+/* Estilos específicos para el popover del select */
+.select-interface-popover {
+  --width: auto;
+  --max-width: 280px;
+  --max-height: 300px;
+  --min-width: 200px;
+}
+
 ion-select::part(icon) {
   color: #333;
 }
@@ -76,6 +86,9 @@ ion-select::part(text) {
 ion-select-option {
   background-color: #ffffff !important;
   color: #333 !important;
+  font-size: 0.95rem !important;
+  padding: 8px !important;
+  min-height: 40px !important;
 }
 
 .action-sheet-option.sc-ion-action-sheet-md {

@@ -60,18 +60,15 @@ ion-select {
 
 /* Estilos para los diferentes estados de asistencia */
 .status-present {
-  --background: rgba(50, 168, 82, 0.1);
-  --color: #32a852;
+  --background: #ffffff;
 }
 
 .status-late {
-  --background: rgba(255, 187, 0, 0.1);
-  --color: #ffbb00;
+  --background: #ffffff;
 }
 
 .status-no_present {
-  --background: rgba(235, 87, 87, 0.1);
-  --color: #eb5757;
+  --background: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {

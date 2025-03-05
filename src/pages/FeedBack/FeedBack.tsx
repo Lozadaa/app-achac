@@ -52,18 +52,6 @@ const FeedBack = () => {
   const [feedbacks, setFeedbacks] = useState<Datum[]>([])
   const [selectedStudent, setSelectedStudent] = useState<number>(0)
   const { id: idCourse } = useParams<{ id: string }>()
-  const [visibleCount, setVisibleCount] = useState(2)
-  const [valueText, setValueText] = useState('')
-  const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>(
-    {}
-  )
-
-  const toggleExpand = (id: number) => {
-    setExpandedItems((prev) => ({
-      ...prev,
-      [id]: !prev[id] // Alternar el estado del ítem específico
-    }))
-  }
 
   const getStudents = async () => {
     setIsLoading(true)
@@ -145,7 +133,7 @@ const FeedBack = () => {
       title={students?.[0]?.subject}
     >
       <div className="feedback-container">
-        <div className="student-selector" style={{ height: '120px' }}>
+        <div className="student-selector">
           <h2 className="section-title">Selecciona un estudiante</h2>
           <IonList className="select-list">
             <IonItem lines="none" className="select-item">
@@ -155,6 +143,9 @@ const FeedBack = () => {
                 onIonChange={(e) => handleStudentChange(e.detail.value)}
                 value={selectedStudent}
                 className="student-select white-bg"
+                interfaceOptions={{
+                  cssClass: 'select-interface-popover'
+                }}
               >
                 {students.map((student) => (
                   <IonSelectOption

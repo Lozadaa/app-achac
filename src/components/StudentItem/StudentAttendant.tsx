@@ -1,5 +1,5 @@
 import './StudentAttendant.css'
-import { IonSelect, IonSelectOption } from '@ionic/react'
+import { IonItem, IonList, IonSelect, IonSelectOption } from '@ionic/react'
 import Logo from '@/assets/logo.png'
 
 type Props = {
@@ -41,7 +41,7 @@ const StudentAttendant = ({ name, image, onChange, attendances }: Props) => {
       </div>
       <div className="attendance-status">
         <IonSelect
-          interface="popover"
+          interface="action-sheet"
           onIonChange={(event) => handleOnChange(event)}
           value={attendances ?? 'no_present'}
           mode="md"
