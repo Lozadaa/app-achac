@@ -253,3 +253,9 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+.network-status-wrapper {
+  padding: 16px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}

@@ -1,6 +1,6 @@
 import { Layout } from '@/components/Layout'
 import { Datum, Students, StudentsFeedback } from '@/types/Courses'
-import { axiosClient } from '@/utils/axios'
+import { axiosOffline } from '@/utils/axiosOffline'
 import {
   IonButton,
   IonIcon,
@@ -23,6 +23,9 @@ import styles from './list.module.css'
 import moment from 'moment'
 import FeedbackCard from '@/components/FeedbackCard/FeedbackCard'
 import FeedbackForm from '@/components/FeedbackForm/FeedbackForm'
+import { useNetwork } from '@/components/NetworkStatusProvider/NetworkStatusProvider'
+import OfflineNotification from '@/components/OfflineNotification/OfflineNotification'
+import { useOfflineSync } from '@/hooks/useOfflineSync'
 
 const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   return (
@@ -52,11 +55,13 @@ const FeedBack = () => {
   const [feedbacks, setFeedbacks] = useState<Datum[]>([])
   const [selectedStudent, setSelectedStudent] = useState<number>(0)
   const { id: idCourse } = useParams<{ id: string }>()
+  const { isOnline } = useNetwork()
+  const { syncData } = useOfflineSync({ syncOnMount: true })
 
   const getStudents = async () => {
     setIsLoading(true)
     try {
-      const { data } = await axiosClient.get<Students[]>(
+      const { data } = await axiosOffline.get<Students[]>(
         '/student/student_attendance/course_schedule',
         {
           params: {
@@ -77,7 +82,7 @@ const FeedBack = () => {
 
     setIsLoading(true)
     try {
-      const { data } = await axiosClient.get<StudentsFeedback>(
+      const { data } = await axiosOffline.get<StudentsFeedback>(
         `/feedbacks/student/${studentId}`
       )
       setFeedbacks(data.data)
@@ -90,7 +95,7 @@ const FeedBack = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axiosClient.delete(`/feedbacks/${id}`)
+      await axiosOffline.delete(`/feedbacks/${id}`)
       getFeedbackStudent(selectedStudent)
     } catch (error) {
       console.error('Error al eliminar feedback:', error)
@@ -102,7 +107,7 @@ const FeedBack = () => {
 
     setIsSubmitting(true)
     try {
-      await axiosClient.post('/feedbacks', {
+      await axiosOffline.post('/feedbacks', {
         feedback: {
           detail: text,
           student_id: selectedStudent
@@ -133,6 +138,8 @@ const FeedBack = () => {
       title={students?.[0]?.subject}
     >
       <div className="feedback-container">
+        <OfflineNotification showSyncButton={true} />
+
         <div className="student-selector">
           <h2 className="section-title">Selecciona un estudiante</h2>
           <IonList className="select-list">

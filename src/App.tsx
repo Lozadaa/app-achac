@@ -45,6 +45,7 @@ import { getUser } from './utils/userUtils'
 import Detail from './pages/Detail/Detail'
 import Attendants from './pages/Attendants/Attendants'
 import FeedBack from './pages/FeedBack/FeedBack'
+import { NetworkStatusProvider } from './components/NetworkStatusProvider/NetworkStatusProvider'
 
 setupIonicReact()
 
@@ -70,31 +71,33 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
-      <IonReactRouter>
-        <IonSplitPane contentId="main">
-          {isUserLogged && <Menu />}
-          <IonRouterOutlet id="main">
-            <Route path="/" exact={true}>
-              <Redirect to={isUserLogged ? '/home' : '/login'} />
-            </Route>
-            <Route path="/home" exact={true}>
-              <Home />
-            </Route>
-            <Route path="/login" exact={true}>
-              <Login />
-            </Route>
-            <Route path="/detail/:id" exact={true}>
-              <Detail />
-            </Route>
-            <Route path="/detail/:id/attendants" exact={true}>
-              <Attendants />
-            </Route>
-            <Route path="/detail/:id/feedback" exact={true}>
-              <FeedBack />
-            </Route>
-          </IonRouterOutlet>
-        </IonSplitPane>
-      </IonReactRouter>
+      <NetworkStatusProvider>
+        <IonReactRouter>
+          <IonSplitPane contentId="main">
+            {isUserLogged && <Menu />}
+            <IonRouterOutlet id="main">
+              <Route path="/" exact={true}>
+                <Redirect to={isUserLogged ? '/home' : '/login'} />
+              </Route>
+              <Route path="/home" exact={true}>
+                <Home />
+              </Route>
+              <Route path="/login" exact={true}>
+                <Login />
+              </Route>
+              <Route path="/detail/:id" exact={true}>
+                <Detail />
+              </Route>
+              <Route path="/detail/:id/attendants" exact={true}>
+                <Attendants />
+              </Route>
+              <Route path="/detail/:id/feedback" exact={true}>
+                <FeedBack />
+              </Route>
+            </IonRouterOutlet>
+          </IonSplitPane>
+        </IonReactRouter>
+      </NetworkStatusProvider>
     </IonApp>
   )
 }

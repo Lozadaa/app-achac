@@ -6,16 +6,19 @@ import {
   IonIcon,
   IonSpinner,
   IonText,
-  IonRippleEffect
+  IonRippleEffect,
+  useIonRouter
 } from '@ionic/react'
 import { UserResponse } from '@/types/Auth'
 import Card from '@/components/Card/Card'
 import { useEffect, useState } from 'react'
-import { axiosClient } from '@/utils/axios'
 import { CourseList } from '@/types/Courses'
 import { getClosestCourses } from '@/utils/dataMappers'
 import emptyImage from '@/assets/empty.png'
 import { calendarOutline, schoolOutline } from 'ionicons/icons'
+import { useNetwork } from '@/components/NetworkStatusProvider/NetworkStatusProvider'
+import OfflineNotification from '@/components/OfflineNotification/OfflineNotification'
+import { useOfflineData } from '@/hooks/useOfflineData'
 
 const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
   return (
@@ -43,42 +46,37 @@ const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
 
 const Home: React.FC = () => {
   const { user } = useUser()
-  const [stateResponse, setStateResponse] = useState<
-    'loading' | 'error' | 'success'
-  >('success')
-  const [courses, setCourses] = useState<CourseList>([])
+  const { isOnline } = useNetwork()
+  const router = useIonRouter()
 
-  useEffect(() => {
-    const getCoursersTeacher = async () => {
-      setStateResponse('loading')
-      try {
-        const { data } = await axiosClient.get<any>('/teacher/courses')
-        setStateResponse('success')
-        const dataFormatter = getClosestCourses(data.data)
-        return setCourses(dataFormatter)
-      } catch (error) {
-        console.error(error)
-        setStateResponse('error')
-      }
-    }
+  // Usar el hook para obtener los cursos
+  const { data, loading, error } = useOfflineData<CourseList>({
+    url: '/teacher/courses',
+    dataTransform: (responseData) => getClosestCourses(responseData.data),
+    initialData: []
+  })
 
-    getCoursersTeacher()
-  }, [])
-  console.log('courses', courses)
+  const navigateToDetail = (id: string, courseName: string) => {
+    router.push(`/detail/${id}?courseName=${courseName}`)
+    localStorage.setItem('courseName', courseName)
+  }
+
   return (
     <Layout customToolbar={<CustomToolbar user={user} />} title="Inicio">
       <div className="container">
+        <OfflineNotification />
+
         <h2 className="subtitle">
           <IonIcon icon={calendarOutline} /> Tus cursos activos
         </h2>
 
-        {stateResponse === 'loading' && (
+        {loading && (
           <div className="loading-spinner">
             <IonSpinner name="crescent" />
           </div>
         )}
 
-        {stateResponse === 'success' && courses?.length === 0 && (
+        {!loading && !error && data?.length === 0 && (
           <div className="empty-container ion-activatable">
             <IonRippleEffect />
             <img src={emptyImage} alt="No hay cursos" />
@@ -89,9 +87,9 @@ const Home: React.FC = () => {
           </div>
         )}
 
-        {stateResponse === 'success' && courses?.length > 0 && (
+        {!loading && !error && data && data.length > 0 && (
           <div className="courses-grid">
-            {courses.map((item) => (
+            {data.map((item) => (
               <div className="course-card" key={item.id}>
                 <Card
                   title={item.attributes.course_name}
@@ -101,7 +99,10 @@ const Home: React.FC = () => {
                   headquarters_name={item.attributes.headquarter_name}
                   subject_name={item.attributes.subject_name}
                   onClick={() =>
-                    (window.location.href = `/detail/${item.attributes.id}?courseName=${item.attributes.course_name}`)
+                    navigateToDetail(
+                      item.attributes.id.toString(),
+                      item.attributes.course_name
+                    )
                   }
                 />
               </div>
@@ -109,12 +110,16 @@ const Home: React.FC = () => {
           </div>
         )}
 
-        {stateResponse === 'error' && (
+        {error && (
           <div className="empty-container">
             <IonIcon icon={schoolOutline} size="large" color="medium" />
             <IonText color="medium">
               <p>Ocurrió un error al cargar los cursos</p>
-              <p>Por favor, intenta nuevamente</p>
+              <p>
+                {!isOnline
+                  ? 'No hay datos en caché. Conéctate a internet para cargar los cursos.'
+                  : 'Por favor, intenta nuevamente'}
+              </p>
             </IonText>
           </div>
         )}

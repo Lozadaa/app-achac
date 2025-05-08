@@ -149,3 +149,14 @@ ion-select-option {
     color: #999;
   }
 }
+
+.offline-indicator {
+  background-color: #f4a41c;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}

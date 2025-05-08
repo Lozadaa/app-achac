@@ -1,0 +1,42 @@
+.offline-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffcc00;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.offline-container.online {
+  display: flex;
+  justify-content: flex-end;
+  background-color: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.offline-container ion-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-buttons ion-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.action-buttons ion-button ion-icon {
+  font-size: 16px;
+  margin-right: 4px;
+}

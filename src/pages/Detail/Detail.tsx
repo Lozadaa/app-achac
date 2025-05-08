@@ -2,8 +2,10 @@ import './Detail.css'
 import { Layout } from '../../components/Layout'
 import { useParams } from 'react-router'
 import ActionCard from '@/components/ActionCard/ActionCard'
-import { IonIcon } from '@ionic/react'
+import { IonIcon, useIonRouter } from '@ionic/react'
 import { arrowBackOutline } from 'ionicons/icons'
+import { useNetwork } from '@/components/NetworkStatusProvider/NetworkStatusProvider'
+import OfflineNotification from '@/components/OfflineNotification/OfflineNotification'
 
 const QUICK_ACTIONS = [
   {
@@ -20,14 +22,14 @@ const QUICK_ACTIONS = [
   }
 ]
 
-const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
+const CustomToolbar: React.FC<{ courseName: string; onBack: () => void }> = ({
+  courseName,
+  onBack
+}) => {
   return (
     <div className="header-detail">
       <div className="toolbar-container">
-        <div
-          className="back-button"
-          onClick={() => (window.location.href = '/home')}
-        >
+        <div className="back-button" onClick={onBack}>
           <IonIcon icon={arrowBackOutline} />
         </div>
         <div className="course-info">
@@ -41,23 +43,33 @@ const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
 
 const Detail: React.FC = () => {
   const { id: idCourse } = useParams<{ id: string }>()
+  const router = useIonRouter()
+  const { isOnline } = useNetwork()
   const queryParams = new URLSearchParams(window.location.search)
   const courseName = queryParams.get('courseName') || ''
 
   const handleNavigate = (id: number) => {
     if (id === 1) {
-      window.location.href = `/detail/${idCourse}/attendants`
+      router.push(`/detail/${idCourse}/attendants`)
     } else {
-      window.location.href = `/detail/${idCourse}/feedback`
+      router.push(`/detail/${idCourse}/feedback`)
     }
+  }
+
+  const handleBack = () => {
+    router.push('/home')
   }
 
   return (
     <Layout
-      customToolbar={<CustomToolbar courseName={courseName} />}
+      customToolbar={
+        <CustomToolbar courseName={courseName} onBack={handleBack} />
+      }
       title={courseName}
     >
       <div className="container">
+        <OfflineNotification />
+
         <h2 className="subtitle">Acciones rápidas:</h2>
         {QUICK_ACTIONS.map((action) => (
           <ActionCard

@@ -21,6 +21,7 @@ import {
 } from 'ionicons/icons'
 import './Menu.css'
 import { useUser } from '@/hooks/useUser'
+import NetworkStatus from '../NetworkStatus/NetworkStatus'
 
 interface AppPage {
   url: string
@@ -33,32 +34,32 @@ const appPages: AppPage[] = [
     title: 'Inicio',
     url: '/home',
     icon: homeOutline
-  },
-  {
-    title: 'Cursos',
-    url: '/courses',
-    icon: bookOutline
-  },
-  {
-    title: 'Calendario',
-    url: '/calendar',
-    icon: calendarOutline
-  },
-  {
-    title: 'Estudiantes',
-    url: '/students',
-    icon: peopleOutline
-  },
-  {
-    title: 'Recursos',
-    url: '/resources',
-    icon: gridOutline
-  },
-  {
-    title: 'Configuración',
-    url: '/settings',
-    icon: settingsOutline
   }
+  // {
+  //   title: 'Cursos',
+  //   url: '/courses',
+  //   icon: bookOutline
+  // },
+  // {
+  //   title: 'Calendario',
+  //   url: '/calendar',
+  //   icon: calendarOutline
+  // },
+  // {
+  //   title: 'Estudiantes',
+  //   url: '/students',
+  //   icon: peopleOutline
+  // },
+  // {
+  //   title: 'Recursos',
+  //   url: '/resources',
+  //   icon: gridOutline
+  // },
+  // {
+  //   title: 'Configuración',
+  //   url: '/settings',
+  //   icon: settingsOutline
+  // }
 ]
 
 const Menu: React.FC = () => {
@@ -94,6 +95,10 @@ const Menu: React.FC = () => {
               </IonMenuToggle>
             ))}
           </IonList>
+
+          <div className="network-status-wrapper">
+            <NetworkStatus />
+          </div>
 
           <div className="menu-footer">
             <IonMenuToggle autoHide={false}>

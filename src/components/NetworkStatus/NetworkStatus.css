@@ -1,0 +1,34 @@
+.network-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.network-status-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.network-status-chip.online {
+  background-color: #2dd36f;
+  color: white;
+}
+
+.network-status-chip.offline {
+  background-color: #f4a41c;
+  color: white;
+}
+
+.last-sync {
+  font-size: 10px;
+  color: #666;
+  text-align: center;
+}

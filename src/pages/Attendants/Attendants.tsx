@@ -1,21 +1,23 @@
 import './Attendants.css'
 import { Layout } from '../../components/Layout'
 import { useParams } from 'react-router'
-import { IonIcon, IonSpinner } from '@ionic/react'
+import { IonIcon, IonSpinner, useIonRouter } from '@ionic/react'
 import { arrowBackOutline, searchOutline } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
-import { axiosClient } from '@/utils/axios'
+import { axiosOffline } from '@/utils/axiosOffline'
 import StudentAttendant from '@/components/StudentItem/StudentAttendant'
 import { Students } from '@/types/Courses'
+import OfflineNotification from '@/components/OfflineNotification/OfflineNotification'
+import { useOfflineData } from '@/hooks/useOfflineData'
 
-const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
+const CustomToolbar: React.FC<{ courseName: string; onBack: () => void }> = ({
+  onBack
+}) => {
+  const courseName = localStorage.getItem('courseName')
   return (
     <div className="header-detail">
       <div className="toolbar-container">
-        <div
-          className="back-button"
-          onClick={() => (window.location.href = '/home')}
-        >
+        <div className="back-button" onClick={onBack}>
           <IonIcon icon={arrowBackOutline} />
         </div>
         <div className="course-info">
@@ -34,43 +36,30 @@ interface StudentAttendance {
 }
 
 const Attendants: React.FC = () => {
+  const courseName = localStorage.getItem('courseName')
   const [stateResponse, setStateResponse] = useState<
     'loading' | 'error' | 'success'
   >('success')
-  const [students, setStudents] = useState<Students[]>([])
   const [student, setStudent] = useState<Students[]>([])
   const { id: idCourse } = useParams<{ id: string }>()
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const router = useIonRouter()
 
-  const getStudents = async (id: string) => {
-    setStateResponse('loading')
-    try {
-      const { data } = await axiosClient.get<Students[]>(
-        '/student/student_attendance/course_schedule',
-        {
-          params: {
-            course_schedule_id: id
-          }
-        }
-      )
-      setStudents(data)
-    } catch (error) {
-      setStateResponse('error')
-      console.error(error)
-    } finally {
-      setStateResponse('success')
-    }
-  }
-
-  useEffect(() => {
-    if (idCourse) {
-      getStudents(idCourse)
-    }
-  }, [idCourse])
+  const { data: students = [] } = useOfflineData<Students[]>({
+    url: '/student/student_attendance/course_schedule',
+    params: { course_schedule_id: idCourse },
+    initialData: []
+  })
 
   useEffect(() => {
     setStudent(students)
   }, [students])
+
+  useEffect(() => {
+    if (searchTerm === '') {
+      setStudent(students)
+    }
+  }, [searchTerm, students])
 
   const createStudentAttendance = async (data: StudentAttendance) => {
     const dataSend = {
@@ -81,7 +70,7 @@ const Attendants: React.FC = () => {
       }
     }
     try {
-      const res = await axiosClient.post('/student_attendances', dataSend)
+      const res = await axiosOffline.post('/student_attendances', dataSend)
       console.warn('Respuesta del servidor:', res.data)
     } catch (error) {
       console.error('Error en la petición:', error)
@@ -99,7 +88,7 @@ const Attendants: React.FC = () => {
       }
     }
     try {
-      const res = await axiosClient.patch(
+      const res = await axiosOffline.patch(
         `/student_attendances/${id}`,
         dataSend
       )
@@ -126,12 +115,6 @@ const Attendants: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    if (searchTerm === '') {
-      setStudent(students)
-    }
-  }, [searchTerm])
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchTerm(value)
@@ -144,20 +127,29 @@ const Attendants: React.FC = () => {
     setStudent(filteredStudents)
   }
 
+  const handleBack = () => {
+    router.push(`/detail/${idCourse}?courseName=${courseName}`)
+  }
+
   return (
     <Layout
-      customToolbar={<CustomToolbar courseName={students[0]?.subject} />}
+      customToolbar={
+        <CustomToolbar courseName={students[0]?.subject} onBack={handleBack} />
+      }
       title={students[0]?.subject}
     >
       <div
         className="container"
         style={{ paddingBottom: students.length >= 5 ? '6rem' : '0px' }}
       >
+        <OfflineNotification showSyncButton={true} />
+
         {stateResponse === 'loading' && (
           <div className="empty-container">
             <IonSpinner name="crescent" />
           </div>
         )}
+
         {stateResponse === 'success' && student.length === 0 && (
           <div className="search-container">
             <input
