@@ -33,32 +33,32 @@ const appPages: AppPage[] = [
     title: 'Inicio',
     url: '/home',
     icon: homeOutline
-  },
-  {
-    title: 'Cursos',
-    url: '/courses',
-    icon: bookOutline
-  },
-  {
-    title: 'Calendario',
-    url: '/calendar',
-    icon: calendarOutline
-  },
-  {
-    title: 'Estudiantes',
-    url: '/students',
-    icon: peopleOutline
-  },
-  {
-    title: 'Recursos',
-    url: '/resources',
-    icon: gridOutline
-  },
-  {
-    title: 'Configuración',
-    url: '/settings',
-    icon: settingsOutline
   }
+  // {
+  //   title: 'Cursos',
+  //   url: '/courses',
+  //   icon: bookOutline
+  // },
+  // {
+  //   title: 'Calendario',
+  //   url: '/calendar',
+  //   icon: calendarOutline
+  // },
+  // {
+  //   title: 'Estudiantes',
+  //   url: '/students',
+  //   icon: peopleOutline
+  // },
+  // {
+  //   title: 'Recursos',
+  //   url: '/resources',
+  //   icon: gridOutline
+  // },
+  // {
+  //   title: 'Configuración',
+  //   url: '/settings',
+  //   icon: settingsOutline
+  // }
 ]
 
 const Menu: React.FC = () => {
