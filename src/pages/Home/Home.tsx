@@ -1,21 +1,21 @@
-import './Home.css'
-import { Layout } from '../../components/Layout'
-import { useUser } from '@/hooks/useUser'
+import './Home.css';
+import { Layout } from '../../components/Layout';
+import { useUser } from '@/hooks/useUser';
 import {
   IonAvatar,
   IonIcon,
   IonSpinner,
   IonText,
-  IonRippleEffect
-} from '@ionic/react'
-import { UserResponse } from '@/types/Auth'
-import Card from '@/components/Card/Card'
-import { useEffect, useState } from 'react'
-import { axiosClient } from '@/utils/axios'
-import { CourseList } from '@/types/Courses'
-import { getClosestCourses } from '@/utils/dataMappers'
-import emptyImage from '@/assets/empty.png'
-import { calendarOutline, schoolOutline } from 'ionicons/icons'
+  IonRippleEffect,
+} from '@ionic/react';
+import { UserResponse } from '@/types/Auth';
+import Card from '@/components/Card/Card';
+import { useEffect, useState } from 'react';
+import { axiosClient } from '@/utils/axios';
+import { CourseList } from '@/types/Courses';
+import { getClosestCourses } from '@/utils/dataMappers';
+import emptyImage from '@/assets/empty.png';
+import { calendarOutline, schoolOutline } from 'ionicons/icons';
 
 const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
   return (
@@ -34,37 +34,38 @@ const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
           <IonText>
             <h1>¡Hola, {user?.name}!</h1>
           </IonText>
-          <p>Bienvenido a tu espacio de aprendizaje</p>
+          <p>Bienvenido a tu espacio de enseñanza y gestión educativa.</p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const Home: React.FC = () => {
-  const { user } = useUser()
+  const { user } = useUser();
   const [stateResponse, setStateResponse] = useState<
     'loading' | 'error' | 'success'
-  >('success')
-  const [courses, setCourses] = useState<CourseList>([])
+  >('success');
+  const [courses, setCourses] = useState<CourseList>([]);
 
   useEffect(() => {
     const getCoursersTeacher = async () => {
-      setStateResponse('loading')
+      setStateResponse('loading');
       try {
-        const { data } = await axiosClient.get<any>('/teacher/courses')
-        setStateResponse('success')
-        const dataFormatter = getClosestCourses(data.data)
-        return setCourses(dataFormatter)
-      } catch (error) {
-        console.error(error)
-        setStateResponse('error')
-      }
-    }
+        const { data } = await axiosClient.get<any>('/teacher/courses');
+        setStateResponse('success');
 
-    getCoursersTeacher()
-  }, [])
-  console.log('courses', courses)
+        const dataFormatter = getClosestCourses(data.data);
+        return setCourses(dataFormatter);
+      } catch (error) {
+        console.error(error);
+        setStateResponse('error');
+      }
+    };
+
+    getCoursersTeacher();
+  }, []);
+  console.log('courses', courses);
   return (
     <Layout customToolbar={<CustomToolbar user={user} />} title="Inicio">
       <div className="container">
@@ -120,7 +121,7 @@ const Home: React.FC = () => {
         )}
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
