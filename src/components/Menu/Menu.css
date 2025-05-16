@@ -9,6 +9,18 @@ ion-menu ion-content::part(scroll) {
   height: 100%;
 }
 
+/* Nuevo estilo para el contenedor principal */
+ion-menu ion-content {
+  display: flex;
+  flex-direction: column;
+}
+
+ion-menu ion-content::part(scroll) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .menu-header {
   background: var(--ion-color-primary);
   background: linear-gradient(
@@ -21,6 +33,7 @@ ion-menu ion-content::part(scroll) {
   position: relative;
   overflow: hidden;
   margin: 0 -8px;
+  flex-shrink: 0;
 }
 
 .menu-header-content {
@@ -70,12 +83,15 @@ ion-menu ion-content::part(scroll) {
   flex-direction: column;
   min-height: 0;
   padding-bottom: 1rem;
+  position: relative;
+  height: 100%;
 }
 
 ion-list {
   padding: 1rem 0.5rem !important;
   background: transparent;
-  min-height: 68vh;
+  flex: 1;
+  overflow-y: auto;
 }
 
 ion-item {
@@ -252,4 +268,25 @@ ion-note {
 
 ion-item.selected {
   --color: var(--ion-color-primary);
+}
+
+/* Posicionamiento específico para tablets */
+@media (min-width: 768px) {
+  .menu-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100vh - 160px);
+  }
+
+  .menu-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+  }
+
+  /* Ajuste para el caso específico mostrado en la imagen */
+  ion-list {
+    min-height: 100px;
+    max-height: calc(100vh - 320px);
+  }
 }

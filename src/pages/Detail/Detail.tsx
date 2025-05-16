@@ -52,10 +52,15 @@ const Detail: React.FC = () => {
     }
   }
 
+  const handleRefresh = async () => {
+    return Promise.resolve()
+  }
+
   return (
     <Layout
       customToolbar={<CustomToolbar courseName={courseName} />}
       title={courseName}
+      onRefresh={handleRefresh}
     >
       <div className="container">
         <h2 className="subtitle">Acciones rápidas:</h2>

@@ -1,12 +1,5 @@
-import React from 'react'
-import {
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonIcon
-} from '@ionic/react'
-import { timeOutline, locationOutline, bookOutline } from 'ionicons/icons'
+import { IonCard, IonCardHeader, IonCardSubtitle, IonIcon } from '@ionic/react'
+import { locationOutline, bookOutline, calendarOutline } from 'ionicons/icons'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -16,17 +9,18 @@ type Props = {
   title: string
   description: string
   onClick?: () => void
-  backgroundColor?: string
+
   start_date?: string
   headquarters_name?: string
   subject_name?: string
+  end_date?: string
 }
 
 const Card = ({
   title,
   description,
   onClick,
-  backgroundColor = '#3880ff',
+
   start_date,
   headquarters_name,
   subject_name
@@ -36,10 +30,15 @@ const Card = ({
     ? format(new Date(start_date), 'HH:mm', { locale: es })
     : null
 
+  // Format the date in DD/MM/YYYY format
+  const formattedDate = start_date
+    ? format(new Date(start_date), 'dd/MM/yyyy', { locale: es })
+    : null
+
   return (
     <IonCard onClick={onClick}>
       <div className="card-content">
-        <div className="color-card" style={{ backgroundColor }} />
+        <div className="color-card " />
 
         <div className="card-header">
           <div className="card-title-row">
@@ -61,6 +60,13 @@ const Card = ({
               <div className="card-info-item">
                 <IonIcon icon={bookOutline} />
                 <span>{subject_name}</span>
+              </div>
+            )}
+
+            {formattedDate && (
+              <div className="card-info-item">
+                <IonIcon icon={calendarOutline} />
+                <span>{formattedDate}</span>
               </div>
             )}
           </div>

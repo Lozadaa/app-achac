@@ -1,6 +1,6 @@
-import { Layout } from '@/components/Layout';
-import { Datum, Students, StudentsFeedback } from '@/types/Courses';
-import { axiosClient } from '@/utils/axios';
+import { Layout } from '@/components/Layout'
+import { Datum, Students, StudentsFeedback } from '@/types/Courses'
+import { axiosClient } from '@/utils/axios'
 import {
   IonButton,
   IonIcon,
@@ -8,21 +8,21 @@ import {
   IonList,
   IonSelect,
   IonSelectOption,
-  IonSpinner,
-} from '@ionic/react';
+  IonSpinner
+} from '@ionic/react'
 import {
   arrowBackOutline,
   trashOutline,
   chevronDownOutline,
-  chevronUpOutline,
-} from 'ionicons/icons';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import './FeedBack.css';
-import styles from './list.module.css';
-import moment from 'moment';
-import FeedbackCard from '@/components/FeedbackCard/FeedbackCard';
-import FeedbackForm from '@/components/FeedbackForm/FeedbackForm';
+  chevronUpOutline
+} from 'ionicons/icons'
+import { useEffect, useState, useCallback } from 'react'
+import { useParams } from 'react-router'
+import './FeedBack.css'
+import styles from './list.module.css'
+import moment from 'moment'
+import FeedbackCard from '@/components/FeedbackCard/FeedbackCard'
+import FeedbackForm from '@/components/FeedbackForm/FeedbackForm'
 
 const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
   return (
@@ -42,95 +42,105 @@ const CustomToolbar: React.FC<{ courseName: string }> = ({ courseName }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const FeedBack = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [students, setStudents] = useState<Students[]>([]);
-  const [feedbacks, setFeedbacks] = useState<Datum[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<number>(0);
-  const { id: idCourse } = useParams<{ id: string }>();
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [students, setStudents] = useState<Students[]>([])
+  const [feedbacks, setFeedbacks] = useState<Datum[]>([])
+  const [selectedStudent, setSelectedStudent] = useState<number>(0)
+  const { id: idCourse } = useParams<{ id: string }>()
 
-  const getStudents = async () => {
-    setIsLoading(true);
+  const getStudents = useCallback(async () => {
+    setIsLoading(true)
     try {
       const { data } = await axiosClient.get<Students[]>(
         '/student/student_attendance/course_schedule',
         {
           params: {
-            course_schedule_id: idCourse,
-          },
+            course_schedule_id: idCourse
+          }
         }
-      );
-      setStudents(data);
+      )
+      setStudents(data)
     } catch (error) {
-      console.error('Error al obtener estudiantes:', error);
+      console.error('Error al obtener estudiantes:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }, [idCourse])
 
-  const getFeedbackStudent = async (studentId: number) => {
-    if (!studentId) return;
+  const getFeedbackStudent = useCallback(async (studentId: number) => {
+    if (!studentId) return
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const { data } = await axiosClient.get<StudentsFeedback>(
         `/feedbacks/student/${studentId}`
-      );
-      setFeedbacks(data.data);
+      )
+      setFeedbacks(data.data)
     } catch (error) {
-      console.error('Error al obtener feedbacks:', error);
+      console.error('Error al obtener feedbacks:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }, [])
 
   const handleDelete = async (id: number) => {
     try {
-      await axiosClient.delete(`/feedbacks/${id}`);
-      getFeedbackStudent(selectedStudent);
+      await axiosClient.delete(`/feedbacks/${id}`)
+      getFeedbackStudent(selectedStudent)
     } catch (error) {
-      console.error('Error al eliminar feedback:', error);
+      console.error('Error al eliminar feedback:', error)
     }
-  };
+  }
 
   const handleAddFeedback = async (text: string) => {
-    if (!selectedStudent || !text.trim()) return;
+    if (!selectedStudent || !text.trim()) return
 
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
       await axiosClient.post('/feedbacks', {
         feedback: {
           detail: text,
-          student_id: selectedStudent,
-        },
-      });
-      getFeedbackStudent(selectedStudent);
+          student_id: selectedStudent
+        }
+      })
+      getFeedbackStudent(selectedStudent)
     } catch (error) {
-      console.error('Error al añadir feedback:', error);
+      console.error('Error al añadir feedback:', error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleStudentChange = (studentId: number) => {
-    setSelectedStudent(studentId);
-    getFeedbackStudent(studentId);
-  };
+    setSelectedStudent(studentId)
+    getFeedbackStudent(studentId)
+  }
 
   useEffect(() => {
     if (idCourse) {
-      getStudents();
+      getStudents()
     }
-  }, [idCourse]);
+  }, [idCourse, getStudents])
+
+  const handleRefresh = async () => {
+    if (idCourse) {
+      await getStudents()
+      if (selectedStudent > 0) {
+        await getFeedbackStudent(selectedStudent)
+      }
+    }
+  }
 
   return (
     <Layout
       customToolbar={<CustomToolbar courseName={students?.[0]?.subject} />}
       title={students?.[0]?.subject}
+      onRefresh={handleRefresh}
     >
       <div className="feedback-container">
         <div className="student-selector">
@@ -147,7 +157,7 @@ const FeedBack = () => {
                     value={selectedStudent}
                     className="student-select white-bg"
                     interfaceOptions={{
-                      cssClass: 'select-interface-popover',
+                      cssClass: 'select-interface-popover'
                     }}
                   >
                     {students.map((student) => (
@@ -206,7 +216,7 @@ const FeedBack = () => {
         )}
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default FeedBack;
+export default FeedBack

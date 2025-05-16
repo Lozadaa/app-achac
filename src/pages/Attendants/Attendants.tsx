@@ -3,7 +3,7 @@ import { Layout } from '../../components/Layout'
 import { useParams } from 'react-router'
 import { IonIcon, IonSpinner } from '@ionic/react'
 import { arrowBackOutline, searchOutline } from 'ionicons/icons'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { axiosClient } from '@/utils/axios'
 import StudentAttendant from '@/components/StudentItem/StudentAttendant'
 import { Students } from '@/types/Courses'
@@ -42,7 +42,7 @@ const Attendants: React.FC = () => {
   const { id: idCourse } = useParams<{ id: string }>()
   const [searchTerm, setSearchTerm] = useState<string>('')
 
-  const getStudents = async (id: string) => {
+  const getStudents = useCallback(async (id: string) => {
     setStateResponse('loading')
     try {
       const { data } = await axiosClient.get<Students[]>(
@@ -54,23 +54,27 @@ const Attendants: React.FC = () => {
         }
       )
       setStudents(data)
+      setStudent(data)
+      setSearchTerm('')
     } catch (error) {
       setStateResponse('error')
       console.error(error)
     } finally {
       setStateResponse('success')
     }
-  }
+  }, [])
 
   useEffect(() => {
     if (idCourse) {
       getStudents(idCourse)
     }
-  }, [idCourse])
+  }, [idCourse, getStudents])
 
-  useEffect(() => {
-    setStudent(students)
-  }, [students])
+  const handleRefresh = async () => {
+    if (idCourse) {
+      await getStudents(idCourse)
+    }
+  }
 
   const createStudentAttendance = async (data: StudentAttendance) => {
     const dataSend = {
@@ -130,7 +134,7 @@ const Attendants: React.FC = () => {
     if (searchTerm === '') {
       setStudent(students)
     }
-  }, [searchTerm])
+  }, [searchTerm, students])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -148,6 +152,7 @@ const Attendants: React.FC = () => {
     <Layout
       customToolbar={<CustomToolbar courseName={students[0]?.subject} />}
       title={students[0]?.subject}
+      onRefresh={handleRefresh}
     >
       <div
         className="container"

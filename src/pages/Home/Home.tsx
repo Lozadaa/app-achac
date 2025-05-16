@@ -1,21 +1,21 @@
-import './Home.css';
-import { Layout } from '../../components/Layout';
-import { useUser } from '@/hooks/useUser';
+import './Home.css'
+import { Layout } from '../../components/Layout'
+import { useUser } from '@/hooks/useUser'
 import {
   IonAvatar,
   IonIcon,
   IonSpinner,
   IonText,
-  IonRippleEffect,
-} from '@ionic/react';
-import { UserResponse } from '@/types/Auth';
-import Card from '@/components/Card/Card';
-import { useEffect, useState } from 'react';
-import { axiosClient } from '@/utils/axios';
-import { CourseList } from '@/types/Courses';
-import { getClosestCourses } from '@/utils/dataMappers';
-import emptyImage from '@/assets/empty.png';
-import { calendarOutline, schoolOutline } from 'ionicons/icons';
+  IonRippleEffect
+} from '@ionic/react'
+import { UserResponse } from '@/types/Auth'
+import Card from '@/components/Card/Card'
+import { useEffect, useState, useCallback } from 'react'
+import { axiosClient } from '@/utils/axios'
+import { CourseList } from '@/types/Courses'
+import { getClosestCourses } from '@/utils/dataMappers'
+import emptyImage from '@/assets/empty.png'
+import { calendarOutline, schoolOutline } from 'ionicons/icons'
 
 const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
   return (
@@ -38,36 +38,44 @@ const CustomToolbar: React.FC<{ user: UserResponse | null }> = ({ user }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Home: React.FC = () => {
-  const { user } = useUser();
+  const { user } = useUser()
   const [stateResponse, setStateResponse] = useState<
     'loading' | 'error' | 'success'
-  >('success');
-  const [courses, setCourses] = useState<CourseList>([]);
+  >('success')
+  const [courses, setCourses] = useState<CourseList>([])
+
+  const getCoursersTeacher = useCallback(async () => {
+    setStateResponse('loading')
+    try {
+      const { data } = await axiosClient.get<any>('/teacher/courses')
+      setStateResponse('success')
+
+      const dataFormatter = getClosestCourses(data.data)
+      return setCourses(dataFormatter)
+    } catch (error) {
+      console.error(error)
+      setStateResponse('error')
+    }
+  }, [])
 
   useEffect(() => {
-    const getCoursersTeacher = async () => {
-      setStateResponse('loading');
-      try {
-        const { data } = await axiosClient.get<any>('/teacher/courses');
-        setStateResponse('success');
+    getCoursersTeacher()
+  }, [])
 
-        const dataFormatter = getClosestCourses(data.data);
-        return setCourses(dataFormatter);
-      } catch (error) {
-        console.error(error);
-        setStateResponse('error');
-      }
-    };
+  const handleRefresh = async () => {
+    await getCoursersTeacher()
+  }
 
-    getCoursersTeacher();
-  }, []);
-  console.log('courses', courses);
   return (
-    <Layout customToolbar={<CustomToolbar user={user} />} title="Inicio">
+    <Layout
+      customToolbar={<CustomToolbar user={user} />}
+      title="Inicio"
+      onRefresh={handleRefresh}
+    >
       <div className="container">
         <h2 className="subtitle">
           <IonIcon icon={calendarOutline} /> Tus cursos activos
@@ -97,7 +105,6 @@ const Home: React.FC = () => {
                 <Card
                   title={item.attributes.course_name}
                   description={''}
-                  backgroundColor={item.attributes.course_color ?? '#222D3A'}
                   start_date={item.attributes.start_date}
                   headquarters_name={item.attributes.headquarter_name}
                   subject_name={item.attributes.subject_name}
@@ -121,7 +128,7 @@ const Home: React.FC = () => {
         )}
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
